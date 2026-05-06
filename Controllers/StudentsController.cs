@@ -62,5 +62,11 @@ namespace DojoManager.Controllers {
 
             return View(student);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkAsPaid(int id) {
+            await _studentService.MarkAsPaid(id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

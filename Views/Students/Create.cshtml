@@ -13,5 +13,27 @@
         <input asp-for="Rank" type="number" step="0.1" min="0" />
     </div>
 
+    <div>
+        <label>
+            <input asp-for="IsVisitor" type="checkbox" />
+            Visitor (not eligible for monthly payment)
+        </label>
+    </div>
+
+    <div id="paymentField">
+        <label asp-for="LastPaidDate">Last Paid Date</label>
+        <input asp-for="LastPaidDate" type="date" />
+    </div>
+
     <button type="submit">Save</button>
 </form>
+
+<script>
+    const visitorCheckbox = document.getElementById('IsVisitor');
+    const paymentField = document.getElementById('paymentField');
+    function togglePayment() {
+        paymentField.style.display = visitorCheckbox.checked ? 'none' : 'block';
+    }
+    visitorCheckbox.addEventListener('change', togglePayment);
+    togglePayment();
+</script>

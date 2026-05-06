@@ -7,6 +7,7 @@ namespace DojoManager.Services {
         Task<Student> Create(Student student);
         Task<Student> Update(Student student);
         Task<bool> Delete(int id);
+        Task<bool> MarkAsPaid(int id);
 
     }
 }

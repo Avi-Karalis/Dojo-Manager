@@ -4,6 +4,22 @@
 
 <p>Name: @Model.Name</p>
 <p>Rank: @Model.Rank</p>
+<p>Type: @(Model.IsVisitor ? "Visitor" : "Member")</p>
+@if (!Model.IsVisitor)
+{
+    <p>Payment: @(Model.HasPaidThisMonth ? "✔ Paid this month" : "✘ Not paid this month")</p>
+    @if (!Model.HasPaidThisMonth)
+    {
+        <form asp-action="MarkAsPaid" method="post">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <button type="submit">Mark as Paid</button>
+        </form>
+    }
+    else
+    {
+        <p>Last paid: @Model.LastPaidDate!.Value.ToString("MMMM d, yyyy")</p>
+    }
+}
 
 <a asp-controller="Attendances"
    asp-action="ByStudent"

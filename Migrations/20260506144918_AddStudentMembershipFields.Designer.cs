@@ -3,6 +3,7 @@ using System;
 using DojoManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DojoManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260506144918_AddStudentMembershipFields")]
+    partial class AddStudentMembershipFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,11 +68,11 @@ namespace DojoManager.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("IsVisitor")
+                    b.Property<bool>("HasPaidThisMonth")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime?>("LastPaidDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<bool>("IsVisitor")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()

@@ -8,6 +8,8 @@
     <tr>
         <th>Name</th>
         <th>Rank</th>
+        <th>Type</th>
+        <th>Payment</th>
         <th>Actions</th>
     </tr>
 
@@ -16,6 +18,25 @@
         <tr>
             <td>@s.Name</td>
             <td>@s.Rank</td>
+            <td>@(s.IsVisitor ? "Visitor" : "Member")</td>
+            <td>
+                @if (s.IsVisitor)
+                {
+                    <span>N/A</span>
+                }
+                else if (s.HasPaidThisMonth)
+                {
+                    <span style="color: green;">✔ Paid</span>
+                }
+                else
+                {
+                    <span style="color: red;">✘ Unpaid</span>
+                    <form asp-action="MarkAsPaid" method="post" style="display:inline">
+                        <input type="hidden" name="id" value="@s.Id" />
+                        <button type="submit">Mark as Paid</button>
+                    </form>
+                }
+            </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@s.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@s.Id">Details</a> |
