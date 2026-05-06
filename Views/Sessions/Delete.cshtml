@@ -1,0 +1,10 @@
+﻿@model Session
+
+<h2>Delete Session</h2>
+
+<p>Delete session at @Model.Location on @Model.Date?</p>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit">Delete</button>
+</form>

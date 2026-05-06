@@ -1,0 +1,12 @@
+﻿@model Student
+
+<h2>Student Details</h2>
+
+<p>Name: @Model.Name</p>
+<p>Rank: @Model.Rank</p>
+
+<a asp-controller="Attendances"
+   asp-action="ByStudent"
+   asp-route-id="@Model.Id">
+    View Attendance
+</a>

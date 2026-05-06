@@ -1,0 +1,46 @@
+﻿using DojoManager.Data;
+using DojoManager.Models;
+using Microsoft.EntityFrameworkCore;
+namespace DojoManager.Services {
+    public class SessionService : ISessionService {
+
+        private readonly AppDbContext _context;
+
+        public SessionService(AppDbContext context) => _context = context;
+
+        public async Task<List<Session>> GetAll() => await _context.Sessions.AsNoTracking().ToListAsync();
+
+        public async Task<Session?> GetById(int id) {
+            return await _context.Sessions
+                .Include(s => s.Attendances)
+                .FirstOrDefaultAsync(s => s.Id == id);
+        }
+
+        public async Task<Session> Create(Session session) {
+            session.Date = DateTime.SpecifyKind(session.Date, DateTimeKind.Utc);
+
+            _context.Sessions.Add(session);
+            await _context.SaveChangesAsync();
+
+            return session;
+        }
+
+        public async Task<bool> Delete(int id) {
+            var session = await _context.Sessions.FindAsync(id);
+            if (session == null) return false;
+
+            _context.Sessions.Remove(session);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<Session> Details(int id) {
+            var session = await _context.Sessions
+                .Include(s => s.Attendances)
+                    .ThenInclude(a => a.Student)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+            return session;
+        }
+    }
+}

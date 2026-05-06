@@ -1,0 +1,32 @@
+﻿@model DojoManager.ViewModels.AddAttendanceViewModel
+
+<h2>Add Attendance</h2>
+
+<form asp-action="Create" method="post">
+
+    <div>
+        <label>Student</label>
+        <select asp-for="StudentId">
+            @foreach (var s in Model.Students)
+            {
+                <option value="@s.Id">@s.Name</option>
+            }
+        </select>
+    </div>
+
+    @if (Model.SessionId != 0)
+    {
+        <input type="hidden" asp-for="SessionId" />
+    }
+    else
+    {
+        <select asp-for="SessionId">
+            @foreach (var s in Model.Sessions)
+            {
+                <option value="@s.Id">@s.Date - @s.Location</option>
+            }
+        </select>
+    }
+
+    <button type="submit">Add Attendance</button>
+</form>

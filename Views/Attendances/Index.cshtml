@@ -1,0 +1,18 @@
+﻿@model List<Attendance>
+
+<h2>All Attendance</h2>
+
+<table>
+    @foreach (var a in Model)
+    {
+        <tr>
+            <td>@a.Student.Name</td>
+            <td>@a.Session.Date</td>
+            <td>@a.Session.Location</td>
+        </tr>
+    }
+</table>
+
+<a asp-controller="Attendances" asp-action="Create">
+    Add Attendance
+</a>

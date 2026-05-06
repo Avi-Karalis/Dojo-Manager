@@ -1,0 +1,31 @@
+﻿@model Session
+
+<h2>Session Details</h2>
+
+<p>
+    <strong>Date:</strong> @Model.Date <br />
+    <strong>Location:</strong> @Model.Location
+</p>
+
+<h3>Attendees</h3>
+
+@if (!Model.Attendances.Any())
+{
+    <p>No attendees yet.</p>
+}
+else
+{
+    <ul>
+        @foreach (var a in Model.Attendances)
+        {
+            <li>@a.Student.Name</li>
+        }
+    </ul>
+}
+
+<a asp-controller="Attendances"
+   asp-action="Create"
+   asp-route-sessionId="@Model.Id"
+   class="btn btn-primary">
+    Add Student to Session
+</a>
