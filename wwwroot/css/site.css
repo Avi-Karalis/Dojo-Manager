@@ -1,31 +1,92 @@
 html {
-  font-size: 14px;
+	font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+	html {
+		font-size: 16px;
+	}
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+	box-shadow:
+		0 0 0 0.1rem white,
+		0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+	position: relative;
+	min-height: 100%;
 }
 
+.form-floating > .form-control-plaintext::placeholder,
+.form-floating > .form-control::placeholder {
+	color: var(--bs-secondary-color);
+	text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder,
+.form-floating > .form-control:focus::placeholder {
+	text-align: start;
+}
+:root {
+	--bg-color: #ffffff;
+--link-color: #0d6efd;
+	--text-color: #212529;
+	--card-bg: #f8f9fa;
+	--nav-bg: #ffffff;
+	--border-color: #e5e5e5;
+}
+
+/* DARK THEME */
+[data-theme="dark"] {
+	--bg-color: #282828;
+  --link-color: #4da3ff;
+	--text-color: #f1f1f1;
+	--card-bg: #1e1e1e;
+	--nav-bg: #1b1b1b;
+	--border-color: #333;
+}
+
+/* APPLY VARIABLES */
 body {
-  margin-bottom: 60px;
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	margin-bottom: 60px;
+	transition:
+		background-color 0.3s,
+		color 0.3s;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+.navbar {
+    background-color: var(--nav-bg) !important;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+.navbar a,
+.navbar .nav-link,
+.navbar-brand {
+    color: var(--text-color) !important;
+}
+
+.table,
+.card {
+	background-color: var(--card-bg);
+	color: var(--text-color);
+	border-color: var(--border-color);
+}
+
+a {
+	color: var(--link-color);
+}
+a:hover {
+    opacity: 0.8;
+}
+.footer {
+    transition: background-color 0.3s, color 0.3s;
+    color: var(--text-color);
+    background-color: var(--bg-color);
 }
