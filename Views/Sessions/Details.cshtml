@@ -28,7 +28,7 @@ else
             {
                 <tr>
                     <td>@a.Student.Name</td>
-                    <td>@a.Student.Rank</td>
+                    <td>@RankHelper.Format(a.Student.Rank)</td>
                     <td>
                         <form asp-controller="Attendances" asp-action="Remove" method="post" style="display:inline">
                             <input type="hidden" name="studentId" value="@a.StudentId" />

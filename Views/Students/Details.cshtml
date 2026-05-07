@@ -3,7 +3,7 @@
 <h2>Student Details</h2>
 
 <p>Name: @Model.Name</p>
-<p>Rank: @Model.Rank</p>
+<p>Rank: @RankHelper.Format(Model.Rank)</p>
 <p>Type: @(Model.IsVisitor ? "Visitor" : "Member")</p>
 @if (!Model.IsVisitor)
 {
