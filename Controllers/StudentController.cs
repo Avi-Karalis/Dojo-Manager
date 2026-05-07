@@ -35,7 +35,16 @@ namespace DojoManager.Controllers {
             if (!ModelState.IsValid) {
                 return View(student);
             }
-            await _studentService.Create(student);
+            try
+            {
+                await _studentService.Create(student);
+                TempData["Success"] = $"{student.Name} was created successfully.";
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Failed to create student. Please try again.";
+                return View(student);
+            }
             return RedirectToAction("Index");
         }
 
@@ -53,7 +62,17 @@ namespace DojoManager.Controllers {
             if (!ModelState.IsValid)
                 return View(student);
 
-            await _studentService.Update(student);
+            try
+            {
+                var result = await _studentService.Update(student);
+                if (result == null) return NotFound();
+                TempData["Success"] = $"{student.Name} was updated successfully.";
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Failed to save changes. Please try again.";
+                return View(student);
+            }
             return RedirectToAction(nameof(Index));
         }
 
@@ -68,7 +87,16 @@ namespace DojoManager.Controllers {
         [Authorize]
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id) {
-            await _studentService.Delete(id);
+            try
+            {
+                var deleted = await _studentService.Delete(id);
+                if (!deleted) return NotFound();
+                TempData["Success"] = "Student deleted successfully.";
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Failed to delete student. They may have attendance records that must be removed first.";
+            }
             return RedirectToAction(nameof(Index));
         }
 
@@ -82,7 +110,8 @@ namespace DojoManager.Controllers {
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> MarkAsPaid(int id) {
-            await _studentService.MarkAsPaid(id);
+            bool result = await _studentService.MarkAsPaid(id);
+            if (!result) return NotFound();
             return RedirectToAction(nameof(Index));
         }
     }

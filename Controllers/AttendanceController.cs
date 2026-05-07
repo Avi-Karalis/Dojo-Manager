@@ -69,9 +69,30 @@ namespace DojoManager.Controllers {
         [HttpPost]
         public async Task<IActionResult> Create(AddAttendanceViewModel vm)
         {
-            foreach (int studentId in vm.StudentIds)
-                await _attendanceService.Add(studentId, vm.SessionId);
-
+            if (vm.SessionId == 0)
+            {
+                TempData["Error"] = "Please select a session.";
+                vm.Students = await _studentService.GetAll();
+                vm.Sessions = await _sessionService.GetAll();
+                return View(vm);
+            }
+            if (vm.StudentIds.Count == 0)
+            {
+                TempData["Error"] = "Please select at least one student.";
+                vm.Students = await _studentService.GetAll();
+                vm.Sessions = await _sessionService.GetAll();
+                return View(vm);
+            }
+            try
+            {
+                foreach (int studentId in vm.StudentIds)
+                    await _attendanceService.Add(studentId, vm.SessionId);
+                TempData["Success"] = $"{vm.StudentIds.Count} attendance record(s) added.";
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Failed to add attendance. Please try again.";
+            }
             return RedirectToAction("Details", "Sessions", new { id = vm.SessionId });
         }
     }

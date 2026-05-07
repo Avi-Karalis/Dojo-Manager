@@ -37,7 +37,16 @@ namespace DojoManager.Controllers {
             if (!ModelState.IsValid)
                 return View(session);
 
-            await _service.Create(session);
+            try
+            {
+                await _service.Create(session);
+                TempData["Success"] = "Session created successfully.";
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Failed to create session. Please try again.";
+                return View(session);
+            }
             return RedirectToAction(nameof(Index));
         }
 
@@ -52,7 +61,16 @@ namespace DojoManager.Controllers {
         [Authorize]
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id) {
-            await _service.Delete(id);
+            try
+            {
+                var deleted = await _service.Delete(id);
+                if (!deleted) return NotFound();
+                TempData["Success"] = "Session deleted successfully.";
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Failed to delete session. Please try again.";
+            }
             return RedirectToAction(nameof(Index));
         }
 

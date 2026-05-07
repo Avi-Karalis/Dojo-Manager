@@ -19,7 +19,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var a in Model.Attendances)
+        @foreach (Attendance a in Model.Attendances)
         {
             <tr>
                 <td>@a.Session!.Date.ToString("yyyy-MM-dd, dddd")</td>
