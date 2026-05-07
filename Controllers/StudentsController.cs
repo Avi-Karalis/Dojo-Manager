@@ -2,6 +2,7 @@
 using DojoManager.Models;
 using DojoManager.Services;
 using DojoManager.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace DojoManager.Controllers {
     public class StudentsController : Controller {
@@ -23,10 +24,12 @@ namespace DojoManager.Controllers {
             return View(vm);
         }
 
-        public IActionResult Create() {
+        [Authorize]
+        public async Task<IActionResult> Create() {
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create(Student student) {
             if (!ModelState.IsValid) {
@@ -36,6 +39,7 @@ namespace DojoManager.Controllers {
             return RedirectToAction("Index");
         }
 
+        [Authorize]
         public async Task<IActionResult> Edit(int id) {
             var student = await _studentService.GetById(id);
             if (student == null) return NotFound();
@@ -43,6 +47,7 @@ namespace DojoManager.Controllers {
             return View(student);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Edit(Student student) {
             if (!ModelState.IsValid)
@@ -53,12 +58,14 @@ namespace DojoManager.Controllers {
         }
 
 
+        [Authorize]
         public async Task<IActionResult> Delete(int id) {
             var student = await _studentService.GetById(id);
             if (student == null) return NotFound();
 
             return View(student);
         }
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id) {
             await _studentService.Delete(id);
@@ -72,6 +79,7 @@ namespace DojoManager.Controllers {
             return View(student);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> MarkAsPaid(int id) {
             await _studentService.MarkAsPaid(id);

@@ -1,10 +1,12 @@
 ﻿using DojoManager.Data;
 using DojoManager.Models;
 using DojoManager.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DojoManager.ViewModels;
 
 namespace DojoManager.Controllers {
+    [Authorize]
     public class AttendancesController : Controller {
 
         private readonly IAttendanceService _attendanceService;

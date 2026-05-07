@@ -1,6 +1,7 @@
 ﻿using DojoManager.Models;
 using DojoManager.ViewModels;
 using DojoManager.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace DojoManager.Controllers {
 
@@ -25,10 +26,12 @@ namespace DojoManager.Controllers {
             return View(viewModel);
         }
 
+        [Authorize]
         public IActionResult Create() {
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create(Session session) {
             if (!ModelState.IsValid)
@@ -38,6 +41,7 @@ namespace DojoManager.Controllers {
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize]
         public async Task<IActionResult> Delete(int id) {
             var session = await _service.GetById(id);
             if (session == null) return NotFound();
@@ -45,6 +49,7 @@ namespace DojoManager.Controllers {
             return View(session);
         }
 
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id) {
             await _service.Delete(id);

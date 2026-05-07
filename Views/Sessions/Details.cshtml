@@ -37,11 +37,14 @@ else
                     <td>@a.Student.Name</td>
                     <td>@RankHelper.Format(a.Student.Rank)</td>
                     <td>
-                        <form asp-controller="Attendances" asp-action="Remove" method="post" style="display:inline">
-                            <input type="hidden" name="studentId" value="@a.StudentId" />
-                            <input type="hidden" name="sessionId" value="@a.SessionId" />
-                            <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
-                        </form>
+                        @if (User.Identity!.IsAuthenticated)
+                        {
+                            <form asp-controller="Attendances" asp-action="Remove" method="post" style="display:inline">
+                                <input type="hidden" name="studentId" value="@a.StudentId" />
+                                <input type="hidden" name="sessionId" value="@a.SessionId" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                            </form>
+                        }
                     </td>
                 </tr>
             }
@@ -49,9 +52,12 @@ else
     </table>
 }
 
-<a asp-controller="Attendances"
-   asp-action="Create"
-   asp-route-sessionId="@Model.Id"
-   class="btn btn-primary">
-    Add Student to Session
-</a>
+@if (User.Identity!.IsAuthenticated)
+{
+    <a asp-controller="Attendances"
+       asp-action="Create"
+       asp-route-sessionId="@Model.Id"
+       class="btn btn-primary">
+        Add Student to Session
+    </a>
+}
