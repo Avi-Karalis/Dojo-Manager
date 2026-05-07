@@ -14,10 +14,10 @@ namespace DojoManager.Services
 
         public async Task<(List<Session> Sessions, int TotalCount)> GetPaged(int page, int pageSize, string? sortBy, string? sortDir)
         {
-            var query = _context.Sessions.AsNoTracking();
+            IQueryable<Session> query = _context.Sessions.AsNoTracking();
             query = ApplySort(query, sortBy, sortDir);
             int total = await query.CountAsync();
-            var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            List<Session>? items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return (items, total);
         }
         private static IQueryable<Session> ApplySort(IQueryable<Session> query, string? sortBy, string? sortDir) =>
@@ -45,7 +45,7 @@ namespace DojoManager.Services
 
         public async Task<bool> Delete(int id)
         {
-            var session = await _context.Sessions.FindAsync(id);
+            Session? session = await _context.Sessions.FindAsync(id);
             if (session == null) return false;
 
             _context.Sessions.Remove(session);
@@ -55,7 +55,7 @@ namespace DojoManager.Services
 
         public async Task<Session> Details(int id)
         {
-            var session = await _context.Sessions
+            Session? session = await _context.Sessions
                 .Include(s => s.Attendances)
                     .ThenInclude(a => a.Student)
                 .FirstOrDefaultAsync(s => s.Id == id);

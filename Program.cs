@@ -1,22 +1,19 @@
 using DojoManager.Data;
-using DojoManager.Services;
+using DojoManager.Services.DependencyInjectionHandler;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
-var builder = WebApplication.CreateBuilder(args);
+
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 Env.Load();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 string? password = Environment.GetEnvironmentVariable("POSTGRESPSW");
 string? connectionString = $"Host=localhost;Port=5433;Database=DojoManager;Username=postgres;Password={password}";
 builder.Configuration["ConnectionStrings:PostgreSQL"] = connectionString;
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL")));
 
-builder.Services.AddScoped<IStudentService, StudentService>();
-builder.Services.AddScoped<ISessionService, SessionService>();
-builder.Services.AddScoped<IAttendanceService, AttendanceService>();
-
+builder.Services.AddDbContext(builder.Configuration);
+builder.Services.AddApplicationServices();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -25,7 +22,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Account/Login";
         options.ExpireTimeSpan = TimeSpan.FromHours(8);
     });
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

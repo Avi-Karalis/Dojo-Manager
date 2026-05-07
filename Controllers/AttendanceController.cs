@@ -18,8 +18,9 @@ namespace DojoManager.Controllers {
 
 
         public async Task<IActionResult> Index(int page = 1, int pageSize = 10, string? sortBy = "date", string? sortDir = "desc") {
-            var (attendances, total) = await _attendanceService.GetPaged(page, pageSize, sortBy, sortDir);
-            var vm = new AttendanceIndexViewModel {
+            (List<Attendance>? attendances, int total) = await _attendanceService.GetPaged(page, pageSize, sortBy, sortDir);
+            AttendanceIndexViewModel? vm = new()
+            {
                 Attendances = attendances,
                 Page = page,
                 PageSize = pageSize,
@@ -31,8 +32,8 @@ namespace DojoManager.Controllers {
         }
 
         public async Task<IActionResult> ByStudent(int id, int page = 1, int pageSize = 10, string? sortBy = "date", string? sortDir = "desc") {
-            var (attendances, total) = await _attendanceService.GetByStudentPaged(id, page, pageSize, sortBy, sortDir);
-            var vm = new AttendanceIndexViewModel {
+            (List<Attendance>? attendances, int total) = await _attendanceService.GetByStudentPaged(id, page, pageSize, sortBy, sortDir);
+            AttendanceIndexViewModel? vm = new () {
                 Attendances = attendances,
                 Page = page,
                 PageSize = pageSize,
@@ -57,7 +58,7 @@ namespace DojoManager.Controllers {
         }
 
         public async Task<IActionResult> Create(int? sessionId) {
-            var vm = new AddAttendanceViewModel {
+            AddAttendanceViewModel? vm = new AddAttendanceViewModel {
                 SessionId = sessionId ?? 0,
                 Students = await _studentService.GetAll(),
                 Sessions = await _sessionService.GetAll()
@@ -68,7 +69,7 @@ namespace DojoManager.Controllers {
         [HttpPost]
         public async Task<IActionResult> Create(AddAttendanceViewModel vm)
         {
-            foreach (var studentId in vm.StudentIds)
+            foreach (int studentId in vm.StudentIds)
                 await _attendanceService.Add(studentId, vm.SessionId);
 
             return RedirectToAction("Details", "Sessions", new { id = vm.SessionId });

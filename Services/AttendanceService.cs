@@ -10,20 +10,20 @@ namespace DojoManager.Services {
         public async Task<List<Attendance>> GetAll() => await _context.Attendances.Include(a => a.Student).Include(a => a.Session).ToListAsync();
 
         public async Task<(List<Attendance> Attendances, int TotalCount)> GetPaged(int page, int pageSize, string? sortBy, string? sortDir) {
-            var query = _context.Attendances.Include(a => a.Student).Include(a => a.Session).AsNoTracking();
+            IQueryable<Attendance> query = _context.Attendances.Include(a => a.Student).Include(a => a.Session).AsNoTracking();
             query = ApplySort(query, sortBy, sortDir);
             int total = await query.CountAsync();
-            var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            List<Attendance>? items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return (items, total);
         }
 
         public async Task<List<Attendance>> GetByStudent(int studentId) => await _context.Attendances.Include(a => a.Student).Include(a => a.Session).Where(a => a.StudentId == studentId).ToListAsync();
 
         public async Task<(List<Attendance> Attendances, int TotalCount)> GetByStudentPaged(int studentId, int page, int pageSize, string? sortBy, string? sortDir) {
-            var query = _context.Attendances.Include(a => a.Student).Include(a => a.Session).Where(a => a.StudentId == studentId).AsNoTracking();
+            IQueryable<Attendance> query = _context.Attendances.Include(a => a.Student).Include(a => a.Session).Where(a => a.StudentId == studentId).AsNoTracking();
             query = ApplySort(query, sortBy, sortDir);
             int total = await query.CountAsync();
-            var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            List<Attendance>? items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return (items, total);
         }
 
@@ -39,7 +39,7 @@ namespace DojoManager.Services {
             };
 
         public async Task Add(int studentId, int sessionId) {
-            var exists = await _context.Attendances.AnyAsync(a => a.StudentId == studentId && a.SessionId == sessionId);
+            bool exists = await _context.Attendances.AnyAsync(a => a.StudentId == studentId && a.SessionId == sessionId);
             
             if (exists) return;
 
@@ -49,7 +49,7 @@ namespace DojoManager.Services {
         }
 
         public async Task Remove(int studentId, int sessionId) {
-            var attendance = await _context.Attendances.FindAsync(studentId, sessionId);
+            Attendance? attendance = await _context.Attendances.FindAsync(studentId, sessionId);
 
             if (attendance == null) return;
             _context.Attendances.Remove(attendance);

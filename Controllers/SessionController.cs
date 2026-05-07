@@ -13,8 +13,8 @@ namespace DojoManager.Controllers {
         }
 
         public async Task<IActionResult> Index(int page = 1, int pageSize = 10, string? sortBy = "date", string? sortDir = "desc") {
-            var (sessions, totalCount) = await _service.GetPaged(page, pageSize, sortBy, sortDir);
-            var viewModel = new SessionIndexViewModel
+            (List<Session>? sessions, int totalCount) = await _service.GetPaged(page, pageSize, sortBy, sortDir);
+            SessionIndexViewModel? viewModel = new()
             {
                 Sessions = sessions,
                 Page = page,
@@ -43,7 +43,7 @@ namespace DojoManager.Controllers {
 
         [Authorize]
         public async Task<IActionResult> Delete(int id) {
-            var session = await _service.GetById(id);
+            Session? session = await _service.GetById(id);
             if (session == null) return NotFound();
 
             return View(session);
@@ -57,7 +57,7 @@ namespace DojoManager.Controllers {
         }
 
         public async Task<IActionResult> Details(int id) {
-            var session = await _service.Details(id);
+            Session? session = await _service.Details(id);
 
             if (session == null) return NotFound();
 

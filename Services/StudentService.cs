@@ -11,7 +11,7 @@ namespace DojoManager.Services
         public async Task<List<Student>> GetAll() => await _context.Students.AsNoTracking().ToListAsync();
 
         public async Task<(List<Student> Students, int TotalCount)> GetPaged(int page, int pageSize, string? sortBy, string? sortDir) {
-            var query = _context.Students.AsNoTracking();
+            IQueryable<Student>? query = _context.Students.AsNoTracking();
 
             query = (sortBy?.ToLower(), sortDir?.ToLower()) switch {
                 ("name", "desc")         => query.OrderByDescending(s => s.Name),
@@ -26,7 +26,7 @@ namespace DojoManager.Services
             };
 
             int total = await query.CountAsync();
-            var students = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            List<Student>? students = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return (students, total);
         }
 
@@ -42,7 +42,7 @@ namespace DojoManager.Services
         }
         public async Task<Student?> Update(Student student)
         {
-            var existing = await _context.Students.FindAsync(student.Id);
+            Student? existing = await _context.Students.FindAsync(student.Id);
             if (existing == null) return null;
 
             if (student.LastPaidDate.HasValue)
@@ -54,7 +54,7 @@ namespace DojoManager.Services
         }
         public async Task<bool> Delete(int id)
         {
-            var student = await _context.Students.FindAsync(id);
+            Student? student = await _context.Students.FindAsync(id);
             if (student == null) return false;
 
             _context.Students.Remove(student);
@@ -64,7 +64,7 @@ namespace DojoManager.Services
         }
         public async Task<bool> MarkAsPaid(int id)
         {
-            var student = await _context.Students.FindAsync(id);
+            Student? student = await _context.Students.FindAsync(id);
             if (student == null) return false;
 
             student.LastPaidDate = DateTime.UtcNow;

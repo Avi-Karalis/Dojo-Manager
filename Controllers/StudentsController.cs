@@ -12,8 +12,8 @@ namespace DojoManager.Controllers {
         }
 
         public async Task<IActionResult> Index(int page = 1, int pageSize = 10, string? sortBy = "name", string? sortDir = "asc") {
-            var (students, total) = await _studentService.GetPaged(page, pageSize, sortBy, sortDir);
-            var vm = new StudentIndexViewModel {
+            (List<Student>? students, int total) = await _studentService.GetPaged(page, pageSize, sortBy, sortDir);
+            StudentIndexViewModel? vm = new () {
                 Students = students,
                 Page = page,
                 PageSize = pageSize,
@@ -41,7 +41,7 @@ namespace DojoManager.Controllers {
 
         [Authorize]
         public async Task<IActionResult> Edit(int id) {
-            var student = await _studentService.GetById(id);
+            Student? student = await _studentService.GetById(id);
             if (student == null) return NotFound();
 
             return View(student);
@@ -60,7 +60,7 @@ namespace DojoManager.Controllers {
 
         [Authorize]
         public async Task<IActionResult> Delete(int id) {
-            var student = await _studentService.GetById(id);
+            Student? student = await _studentService.GetById(id);
             if (student == null) return NotFound();
 
             return View(student);
@@ -73,7 +73,7 @@ namespace DojoManager.Controllers {
         }
 
         public async Task<IActionResult> Details(int id) {
-            var student = await _studentService.GetById(id);
+            Student? student = await _studentService.GetById(id);
             if (student == null) return NotFound();
 
             return View(student);

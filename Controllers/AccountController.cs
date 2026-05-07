@@ -28,8 +28,8 @@ namespace DojoManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string username, string password, string? returnUrl = null)
         {
-            var adminUsername = _config["Admin:Username"];
-            var adminPassword = _config["Admin:Password"];
+            string? adminUsername = _config["Admin:Username"];
+            string? adminPassword = _config["Admin:Password"];
 
             if (username != adminUsername || password != adminPassword)
             {
@@ -38,14 +38,14 @@ namespace DojoManager.Controllers
                 return View();
             }
 
-            var claims = new List<Claim>
+            List<Claim>? claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, username),
                 new Claim(ClaimTypes.Role, "Admin")
             };
 
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
+            ClaimsIdentity? identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            ClaimsPrincipal? principal = new ClaimsPrincipal(identity);
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
