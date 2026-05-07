@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,15 +9,21 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/DojoManager.styles.css" asp-append-version="true" />
-
+    <script>
+            (function () {
+                var theme = localStorage.getItem("theme");
+                if (theme === "dark") document.documentElement.setAttribute("data-theme", "dark");
+            })();
+    </script>
 </head>
+
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DojoManager</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -51,9 +58,7 @@
                     <ul class="navbar-nav">
 
                         <li class="nav-item">
-                            <a class="btn btn-primary ms-2"
-                               asp-controller="Attendances"
-                               asp-action="Create">
+                            <a class="btn btn-primary ms-2" asp-controller="Attendances" asp-action="Create">
                                 + Add Attendance
                             </a>
                         </li>
@@ -83,29 +88,25 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
-    const toggleBtn = document.getElementById("themeToggle");
-    const root = document.documentElement;
+            const toggleBtn = document.getElementById("themeToggle");
+            const root = document.documentElement;
 
-        function setTheme(theme) {
-        if (theme === "dark") {
-            root.setAttribute("data-theme", "dark");
-            toggleBtn.innerText = "☀️ Light Mode";
-        } else {
-            root.removeAttribute("data-theme");
-            toggleBtn.innerText = "🌙 Dark Mode";
-        }
-        localStorage.setItem("theme", theme);
-    }
+            toggleBtn.innerText = root.getAttribute("data-theme") === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
 
-    // load saved theme
-    const savedTheme = localStorage.getItem("theme") || "light";
-    setTheme(savedTheme);
-
-    toggleBtn.addEventListener("click", () => {
-        const current = root.getAttribute("data-theme");
-        setTheme(current === "dark" ? "light" : "dark");
-    });
-</script>
+            toggleBtn.addEventListener("click", () => {
+                const isDark = root.getAttribute("data-theme") === "dark";
+                if (isDark) {
+                    root.removeAttribute("data-theme");
+                    toggleBtn.innerText = "🌙 Dark Mode";
+                    localStorage.setItem("theme", "light");
+                } else {
+                    root.setAttribute("data-theme", "dark");
+                    toggleBtn.innerText = "☀️ Light Mode";
+                    localStorage.setItem("theme", "dark");
+                }
+            });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>

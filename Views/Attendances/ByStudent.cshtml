@@ -21,7 +21,7 @@
         @foreach (var a in Model.Attendances)
         {
             <tr>
-                <td>@a.Session!.Date.ToString("yyyy-MM-dd")</td>
+                <td>@a.Session!.Date.ToString("yyyy-MM-dd, dddd")</td>
                 <td>@a.Session.Location</td>
             </tr>
         }
