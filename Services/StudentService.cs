@@ -34,6 +34,8 @@ namespace DojoManager.Services
 
         public async Task<Student> Create(Student student)
         {
+            if (student.LastPaidDate.HasValue)
+                student.LastPaidDate = DateTime.SpecifyKind(student.LastPaidDate.Value, DateTimeKind.Utc);
             await _context.Students.AddAsync(student);
             await _context.SaveChangesAsync();
             return student;
@@ -42,6 +44,9 @@ namespace DojoManager.Services
         {
             var existing = await _context.Students.FindAsync(student.Id);
             if (existing == null) return null;
+
+            if (student.LastPaidDate.HasValue)
+                student.LastPaidDate = DateTime.SpecifyKind(student.LastPaidDate.Value, DateTimeKind.Utc);
 
             _context.Entry(existing).CurrentValues.SetValues(student);
             await _context.SaveChangesAsync();

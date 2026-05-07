@@ -2,30 +2,31 @@
 @{
     ViewData["Title"] = "Students";
 }
-<h2>Students</h2>
-
-<a asp-action="Create">Create New</a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Students</h2>
+    <a asp-action="Create" class="btn btn-primary">+ Create New</a>
+</div>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                <a href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize, sortBy = "name", sortDir = Model.NextDir("name") })">
+                <a href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize, sortBy = "name", sortDir = Model.NextDir("name") })" class="btn btn-sm btn-outline-secondary">
                     Name@(Model.SortIndicator("name"))
                 </a>
             </th>
             <th>
-                <a href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize, sortBy = "rank", sortDir = Model.NextDir("rank") })">
+                <a href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize, sortBy = "rank", sortDir = Model.NextDir("rank") })" class="btn btn-sm btn-outline-secondary">
                     Rank@(Model.SortIndicator("rank"))
                 </a>
             </th>
             <th>
-                <a href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize, sortBy = "isvisitor", sortDir = Model.NextDir("isvisitor") })">
+                <a href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize, sortBy = "isvisitor", sortDir = Model.NextDir("isvisitor") })" class="btn btn-sm btn-outline-secondary">
                     Type@(Model.SortIndicator("isvisitor"))
                 </a>
             </th>
             <th>
-                <a href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize, sortBy = "lastpaiddate", sortDir = Model.NextDir("lastpaiddate") })">
+                <a href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize, sortBy = "lastpaiddate", sortDir = Model.NextDir("lastpaiddate") })" class="btn btn-sm btn-outline-secondary">
                     Payment@(Model.SortIndicator("lastpaiddate"))
                 </a>
             </th>
@@ -42,47 +43,47 @@
             <td>
                 @if (s.IsVisitor)
                 {
-                    <span>N/A</span>
+                    <span class="text-muted">N/A</span>
                 }
                 else if (s.HasPaidThisMonth)
                 {
-                    <span style="color: green;">✔ Paid</span>
+                    <span class="badge bg-success">✔ Paid</span>
                 }
                 else
                 {
-                    <span style="color: red;">✘ Unpaid</span>
+                        <span class="badge bg-danger">✘ Not Paid</span>
                     <form asp-action="MarkAsPaid" method="post" style="display:inline">
                         <input type="hidden" name="id" value="@s.Id" />
-                        <button type="submit">Mark as Paid</button>
+                        <button type="submit" class="btn btn-sm btn-warning">Mark as Paid</button>
                     </form>
                 }
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@s.Id">Edit</a> | <a asp-action="Details" asp-route-id="@s.Id">Details</a> | <a asp-action="Delete" asp-route-id="@s.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@s.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                <a asp-action="Details" asp-route-id="@s.Id" class="btn btn-sm btn-outline-secondary">Details</a>
+                <a asp-action="Delete" asp-route-id="@s.Id" class="btn btn-sm btn-outline-danger">Delete</a>
             </td>
         </tr>
     }
     </tbody>
 </table>
 
-<div style="display:flex; align-items:center; gap:1rem;">
+<div class="d-flex align-items-center gap-2 flex-wrap mt-2">
     @if (Model.HasPrev)
     {
-        <a asp-action="Index" asp-route-page="@(Model.Page - 1)" asp-route-pageSize="@Model.PageSize"
-           asp-route-sortBy="@Model.SortBy" asp-route-sortDir="@Model.SortDir">← Prev</a>
+        <a href="@Url.Action("Index", new { page = Model.Page - 1, pageSize = Model.PageSize, sortBy = Model.SortBy, sortDir = Model.SortDir })" class="btn btn-outline-secondary btn-sm">← Prev</a>
     }
-    <span>Page @Model.Page of @Model.TotalPages (@Model.TotalCount total)</span>
+    <span class="mx-1">Page @Model.Page of @Model.TotalPages (@Model.TotalCount total)</span>
     @if (Model.HasNext)
     {
-        <a asp-action="Index" asp-route-page="@(Model.Page + 1)" asp-route-pageSize="@Model.PageSize"
-           asp-route-sortBy="@Model.SortBy" asp-route-sortDir="@Model.SortDir">Next →</a>
+        <a href="@Url.Action("Index", new { page = Model.Page + 1, pageSize = Model.PageSize, sortBy = Model.SortBy, sortDir = Model.SortDir })" class="btn btn-outline-secondary btn-sm">Next →</a>
     }
-    <span>
-        Page size:
+    <div class="ms-3 d-flex align-items-center gap-1">
+        <span class="me-1">Per page:</span>
         @foreach (var size in new[] { 5, 10, 25, 50 })
         {
             <a href="@Url.Action("Index", new { page = 1, pageSize = size, sortBy = Model.SortBy, sortDir = Model.SortDir })"
-               style="margin-right:4px; @(Model.PageSize == size ? "font-weight:bold;" : "")">@size</a>
+               class="btn btn-sm @(Model.PageSize == size ? "btn-secondary" : "btn-outline-secondary")">@size</a>
         }
-    </span>
+    </div>
 </div>

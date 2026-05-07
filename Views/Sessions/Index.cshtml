@@ -1,14 +1,15 @@
 ﻿@model DojoManager.ViewModels.SessionIndexViewModel
 @{ ViewData["Title"] = "Sessions"; }
-<h2>Sessions</h2>
-
-<a asp-action="Create">Create Session</a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Sessions</h2>
+    <a asp-action="Create" class="btn btn-primary">+ Create Session</a>
+</div>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                <a href="@Url.Action("Index",new { page = 1, pageSize = Model.PageSize, sortBy = "Date", sortDir = Model.NextDir("Date") })">
+                <a href="@Url.Action("Index",new { page = 1, pageSize = Model.PageSize, sortBy = "Date", sortDir = Model.NextDir("Date") })" class="btn btn-sm btn-outline-secondary">
                     Date@(Model.SortIndicator("Date"))
                 </a>
             </th>
@@ -23,10 +24,30 @@
                 <td>@s.Date.ToString("yyyy-MM-dd, dddd")</td>
                 <td>@s.Location</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@s.Id">View</a> |
-                    <a asp-action="Delete" asp-route-id="@s.Id">Delete</a>
+                    <a asp-action="Details" asp-route-id="@s.Id" class="btn btn-sm btn-outline-secondary">View</a>
+                    <a asp-action="Delete" asp-route-id="@s.Id" class="btn btn-sm btn-outline-danger">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<div class="d-flex align-items-center gap-2 flex-wrap mt-2">
+    @if (Model.HasPrev)
+    {
+        <a href="@Url.Action("Index", new { page = Model.Page - 1, pageSize = Model.PageSize, sortBy = Model.SortBy, sortDir = Model.SortDir })" class="btn btn-outline-secondary btn-sm">← Prev</a>
+    }
+    <span class="mx-1">Page @Model.Page of @Model.TotalPages (@Model.TotalCount total)</span>
+    @if (Model.HasNext)
+    {
+        <a href="@Url.Action("Index", new { page = Model.Page + 1, pageSize = Model.PageSize, sortBy = Model.SortBy, sortDir = Model.SortDir })" class="btn btn-outline-secondary btn-sm">Next →</a>
+    }
+    <div class="ms-3 d-flex align-items-center gap-1">
+        <span class="me-1">Per page:</span>
+        @foreach (var size in new[] { 5, 10, 25, 50 })
+        {
+            <a href="@Url.Action("Index", new { page = 1, pageSize = size, sortBy = Model.SortBy, sortDir = Model.SortDir })"
+               class="btn btn-sm @(Model.PageSize == size ? "btn-secondary" : "btn-outline-secondary")">@size</a>
+        }
+    </div>
+</div>

@@ -1,28 +1,41 @@
 ﻿@model Student
 @{ ViewData["Title"] = "Details for " + Model.Name; }
-<h2>Student Details</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">@Model.Name</h2>
+    <div class="d-flex gap-2">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Edit</a>
+        <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+    </div>
+</div>
 
-<p>Name: @Model.Name</p>
-<p>Rank: @RankHelper.Format(Model.Rank)</p>
-<p>Type: @(Model.IsVisitor ? "Visitor" : "Member")</p>
-@if (!Model.IsVisitor)
-{
-    <p>Payment: @(Model.HasPaidThisMonth ? "✔ Paid this month" : "✘ Not paid this month")</p>
-    @if (!Model.HasPaidThisMonth)
-    {
-        <form asp-action="MarkAsPaid" method="post">
-            <input type="hidden" name="id" value="@Model.Id" />
-            <button type="submit">Mark as Paid</button>
-        </form>
-    }
-    else
-    {
-        <p>Last paid: @Model.LastPaidDate!.Value.ToString("MMMM d, yyyy")</p>
-    }
-}
+<div class="card p-4 mb-3" style="max-width:500px">
+    <dl class="row mb-0">
+        <dt class="col-sm-4">Rank</dt>
+        <dd class="col-sm-8">@RankHelper.Format(Model.Rank)</dd>
+        <dt class="col-sm-4">Type</dt>
+        <dd class="col-sm-8">@(Model.IsVisitor ? "Visitor" : "Member")</dd>
+        @if (!Model.IsVisitor)
+        {
+            <dt class="col-sm-4">Payment</dt>
+            <dd class="col-sm-8">
+                @if (Model.HasPaidThisMonth)
+                {
+                    <span class="badge bg-success">✔ Paid this month</span>
+                    <div class="text-theme-muted small mt-1">Last paid: @Model.LastPaidDate!.Value.ToString("MMMM d, yyyy")</div>
+                }
+                else
+                {
+                    <span class="badge bg-danger">✘ Not paid this month</span>
+                    <form asp-action="MarkAsPaid" method="post" class="mt-2">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn btn-sm btn-warning">Mark as Paid</button>
+                    </form>
+                }
+            </dd>
+        }
+    </dl>
+</div>
 
-<a asp-controller="Attendances"
-   asp-action="ByStudent"
-   asp-route-id="@Model.Id">
+<a asp-controller="Attendances" asp-action="ByStudent" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
     View Attendance
 </a>

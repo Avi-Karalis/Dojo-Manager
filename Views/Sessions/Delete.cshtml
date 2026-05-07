@@ -1,10 +1,16 @@
 ﻿@model Session
 @{ ViewData["Title"] = "Delete Session"; }
-<h2>Delete Session</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Delete Session</h2>
+</div>
 
-<p>Delete session at @Model.Location on @Model.Date?</p>
-
-<form asp-action="Delete" method="post">
-    <input type="hidden" asp-for="Id" />
-    <button type="submit">Delete</button>
-</form>
+<div class="card p-4" style="max-width:500px">
+    <p>Are you sure you want to delete the session at <strong>@Model.Location</strong> on <strong>@Model.Date.ToString("yyyy-MM-dd")</strong>?</p>
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

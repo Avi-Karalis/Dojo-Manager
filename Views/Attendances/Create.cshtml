@@ -1,33 +1,40 @@
 ﻿@model DojoManager.ViewModels.AddAttendanceViewModel
 @{ ViewData["Title"] = "Add Attendance"; }
-<h2>Add Attendance</h2>
-
-<form asp-action="Create" method="post">
-
-<div>
-    <label>Students</label>
-    @foreach (var s in Model.Students)
-    {
-        <div>
-            <input type="checkbox" name="StudentIds" value="@s.Id" id="student_@s.Id" />
-            <label for="student_@s.Id">@s.Name</label>
-        </div>
-    }
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Add Attendance</h2>
 </div>
 
-    @if (Model.SessionId != 0)
-    {
-        <input type="hidden" asp-for="SessionId" />
-    }
-    else
-    {
-        <select asp-for="SessionId">
-            @foreach (var s in Model.Sessions)
+<div class="card p-4" style="max-width:500px">
+    <form asp-action="Create" method="post">
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Students</label>
+            @foreach (var s in Model.Students)
             {
-                <option value="@s.Id">@s.Date - @s.Location</option>
+                <div class="form-check">
+                    <input type="checkbox" name="StudentIds" value="@s.Id" id="student_@s.Id" class="form-check-input" />
+                    <label for="student_@s.Id" class="form-check-label">@s.Name</label>
+                </div>
             }
-        </select>
-    }
-
-    <button type="submit">Add Attendance</button>
-</form>
+        </div>
+        @if (Model.SessionId != 0)
+        {
+            <input type="hidden" asp-for="SessionId" />
+        }
+        else
+        {
+            <div class="mb-3">
+                <label class="form-label">Session</label>
+                <select asp-for="SessionId" class="form-select">
+                    @foreach (var s in Model.Sessions)
+                    {
+                        <option value="@s.Id">@s.Date.ToString("yyyy-MM-dd, dddd") - @s.Location</option>
+                    }
+                </select>
+            </div>
+        }
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Add Attendance</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

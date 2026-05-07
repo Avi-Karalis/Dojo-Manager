@@ -1,11 +1,18 @@
 ﻿@model Session
 @{ ViewData["Title"] = "Session Details"; }
-<h2>Session Details</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Session Details</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+</div>
 
-<p>
-    <strong>Date:</strong> @Model.Date <br />
-    <strong>Location:</strong> @Model.Location
-</p>
+<div class="card p-4 mb-3" style="max-width:500px">
+    <dl class="row mb-0">
+        <dt class="col-sm-4">Date</dt>
+        <dd class="col-sm-8">@Model.Date.ToString("yyyy-MM-dd, dddd")</dd>
+        <dt class="col-sm-4">Location</dt>
+        <dd class="col-sm-8">@Model.Location</dd>
+    </dl>
+</div>
 
 <h3>Attendees</h3>
 
@@ -33,7 +40,7 @@ else
                         <form asp-controller="Attendances" asp-action="Remove" method="post" style="display:inline">
                             <input type="hidden" name="studentId" value="@a.StudentId" />
                             <input type="hidden" name="sessionId" value="@a.SessionId" />
-                            <button type="submit">Remove</button>
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
                         </form>
                     </td>
                 </tr>

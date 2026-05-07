@@ -6,17 +6,17 @@
     <thead>
         <tr>
             <th>
-                <a href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize, sortBy = "student", sortDir = Model.NextDir("student") })">
+                <a href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize, sortBy = "student", sortDir = Model.NextDir("student") })" class="btn btn-sm btn-outline-secondary">
                     Student@(Model.SortIndicator("student"))
                 </a>
             </th>
             <th>
-                <a href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize, sortBy = "date", sortDir = Model.NextDir("date") })">
+                <a href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize, sortBy = "date", sortDir = Model.NextDir("date") })" class="btn btn-sm btn-outline-secondary">
                     Date@(Model.SortIndicator("date"))
                 </a>
             </th>
             <th>
-                <a href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize, sortBy = "location", sortDir = Model.NextDir("location") })">
+                <a href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize, sortBy = "location", sortDir = Model.NextDir("location") })" class="btn btn-sm btn-outline-secondary">
                     Location@(Model.SortIndicator("location"))
                 </a>
             </th>
@@ -34,26 +34,24 @@
     </tbody>
 </table>
 
-<div style="display:flex; align-items:center; gap:1rem;">
+<div class="d-flex align-items-center gap-2 flex-wrap mt-2 mb-3">
     @if (Model.HasPrev)
     {
-        <a href="@Url.Action("Index", new { page = Model.Page - 1, pageSize = Model.PageSize, sortBy = Model.SortBy, sortDir = Model.SortDir })">← Prev</a>
+        <a href="@Url.Action("Index", new { page = Model.Page - 1, pageSize = Model.PageSize, sortBy = Model.SortBy, sortDir = Model.SortDir })" class="btn btn-outline-secondary btn-sm">← Prev</a>
     }
-    <span>Page @Model.Page of @Model.TotalPages (@Model.TotalCount total)</span>
+    <span class="mx-1">Page @Model.Page of @Model.TotalPages (@Model.TotalCount total)</span>
     @if (Model.HasNext)
     {
-        <a href="@Url.Action("Index", new { page = Model.Page + 1, pageSize = Model.PageSize, sortBy = Model.SortBy, sortDir = Model.SortDir })">Next →</a>
+        <a href="@Url.Action("Index", new { page = Model.Page + 1, pageSize = Model.PageSize, sortBy = Model.SortBy, sortDir = Model.SortDir })" class="btn btn-outline-secondary btn-sm">Next →</a>
     }
-    <span>
-        Page size:
+    <div class="ms-3 d-flex align-items-center gap-1">
+        <span class="me-1">Per page:</span>
         @foreach (var size in new[] { 5, 10, 25, 50 })
         {
             <a href="@Url.Action("Index", new { page = 1, pageSize = size, sortBy = Model.SortBy, sortDir = Model.SortDir })"
-               style="margin-right:4px; @(Model.PageSize == size ? "font-weight:bold;" : "")">@size</a>
+               class="btn btn-sm @(Model.PageSize == size ? "btn-secondary" : "btn-outline-secondary")">@size</a>
         }
-    </span>
+    </div>
 </div>
 
-<a asp-controller="Attendances" asp-action="Create">
-    Add Attendance
-</a>
+<a asp-controller="Attendances" asp-action="Create" class="btn btn-primary mt-2">+ Add Attendance</a>

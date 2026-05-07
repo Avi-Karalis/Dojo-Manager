@@ -1,17 +1,22 @@
 ﻿@model Session
 @{ ViewData["Title"] = "Create Session"; }
-<h2>Create Session</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Create Session</h2>
+</div>
 
-<form asp-action="Create" method="post">
-    <div>
-        <label>Date</label>
-        <input asp-for="Date" type="datetime-local" />
-    </div>
-
-    <div>
-        <label>Location</label>
-        <input asp-for="Location" />
-    </div>
-
-    <button type="submit">Save</button>
-</form>
+<div class="card p-4" style="max-width:500px">
+    <form asp-action="Create" method="post">
+        <div class="mb-3">
+            <label class="form-label">Date</label>
+            <input asp-for="Date" type="datetime-local" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Location</label>
+            <input asp-for="Location" class="form-control" />
+        </div>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
