@@ -1,5 +1,7 @@
 ﻿@model Student
-
+@{
+    ViewData["Title"] = "Edit Student - " + Model.Name;
+}
 <h2>Edit Student</h2>
 
 <form asp-action="Edit" method="post">

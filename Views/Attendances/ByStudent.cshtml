@@ -1,4 +1,5 @@
 ﻿@model DojoManager.ViewModels.AttendanceIndexViewModel
+@{ ViewData["Title"] = "Student Attendance for " + (Model.Attendances.FirstOrDefault()?.Student?.Name ?? "Unknown"); }
 
 <h2>Attendance for @Model.Attendances.FirstOrDefault()?.Student?.Name</h2>
 
