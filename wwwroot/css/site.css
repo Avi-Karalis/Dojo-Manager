@@ -79,6 +79,16 @@ body {
 	border-color: var(--border-color);
 }
 
+.table {
+	--bs-table-bg: var(--bg-color);
+	--bs-table-color: var(--text-color);
+	--bs-table-border-color: var(--border-color);
+	--bs-table-striped-bg: var(--card-bg);
+	--bs-table-striped-color: var(--text-color);
+	--bs-table-hover-bg: var(--border-color);
+	--bs-table-hover-color: var(--text-color);
+}
+
 a {
 	color: var(--link-color);
 }

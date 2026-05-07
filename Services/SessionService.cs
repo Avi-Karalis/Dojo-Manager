@@ -1,8 +1,10 @@
 ﻿using DojoManager.Data;
 using DojoManager.Models;
 using Microsoft.EntityFrameworkCore;
-namespace DojoManager.Services {
-    public class SessionService : ISessionService {
+namespace DojoManager.Services
+{
+    public class SessionService : ISessionService
+    {
 
         private readonly AppDbContext _context;
 
@@ -10,13 +12,29 @@ namespace DojoManager.Services {
 
         public async Task<List<Session>> GetAll() => await _context.Sessions.AsNoTracking().ToListAsync();
 
-        public async Task<Session?> GetById(int id) {
+        public async Task<(List<Session> Sessions, int TotalCount)> GetPaged(int page, int pageSize, string? sortBy, string? sortDir)
+        {
+            var query = _context.Sessions.AsNoTracking();
+            query = ApplySort(query, sortBy, sortDir);
+            int total = await query.CountAsync();
+            var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            return (items, total);
+        }
+        private static IQueryable<Session> ApplySort(IQueryable<Session> query, string? sortBy, string? sortDir) =>
+            (sortBy?.ToLower(), sortDir?.ToLower()) switch{
+                ("date", "desc") => query.OrderByDescending(s => s.Date),
+                ("date", _) => query.OrderBy(s => s.Date),
+                _ => query.OrderByDescending(s => s.Date)
+            };
+        public async Task<Session?> GetById(int id)
+        {
             return await _context.Sessions
                 .Include(s => s.Attendances)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public async Task<Session> Create(Session session) {
+        public async Task<Session> Create(Session session)
+        {
             session.Date = DateTime.SpecifyKind(session.Date, DateTimeKind.Utc);
 
             _context.Sessions.Add(session);
@@ -25,7 +43,8 @@ namespace DojoManager.Services {
             return session;
         }
 
-        public async Task<bool> Delete(int id) {
+        public async Task<bool> Delete(int id)
+        {
             var session = await _context.Sessions.FindAsync(id);
             if (session == null) return false;
 
@@ -34,7 +53,8 @@ namespace DojoManager.Services {
             return true;
         }
 
-        public async Task<Session> Details(int id) {
+        public async Task<Session> Details(int id)
+        {
             var session = await _context.Sessions
                 .Include(s => s.Attendances)
                     .ThenInclude(a => a.Student)

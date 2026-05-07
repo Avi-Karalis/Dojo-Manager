@@ -10,6 +10,26 @@ namespace DojoManager.Services
 
         public async Task<List<Student>> GetAll() => await _context.Students.AsNoTracking().ToListAsync();
 
+        public async Task<(List<Student> Students, int TotalCount)> GetPaged(int page, int pageSize, string? sortBy, string? sortDir) {
+            var query = _context.Students.AsNoTracking();
+
+            query = (sortBy?.ToLower(), sortDir?.ToLower()) switch {
+                ("name", "desc")         => query.OrderByDescending(s => s.Name),
+                ("name", _)             => query.OrderBy(s => s.Name),
+                ("rank", "desc")        => query.OrderByDescending(s => s.Rank),
+                ("rank", _)             => query.OrderBy(s => s.Rank),
+                ("isvisitor", "desc")   => query.OrderByDescending(s => s.IsVisitor),
+                ("isvisitor", _)        => query.OrderBy(s => s.IsVisitor),
+                ("lastpaiddate", "desc")=> query.OrderByDescending(s => s.LastPaidDate),
+                ("lastpaiddate", _)     => query.OrderBy(s => s.LastPaidDate),
+                _                       => query.OrderBy(s => s.Name)
+            };
+
+            int total = await query.CountAsync();
+            var students = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            return (students, total);
+        }
+
         public async Task<Student?> GetById(int id) => await _context.Students.FindAsync(id);
 
         public async Task<Student> Create(Student student)

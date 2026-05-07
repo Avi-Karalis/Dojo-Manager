@@ -1,6 +1,7 @@
 ﻿using DojoManager.Data;
 using DojoManager.Models;
 using DojoManager.Services;
+using DojoManager.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 namespace DojoManager.Controllers {
     public class StudentsController : Controller {
@@ -9,9 +10,17 @@ namespace DojoManager.Controllers {
             _studentService = studentService;
         }
 
-        public async Task<IActionResult> Index() {
-            List<Student> students = await _studentService.GetAll();
-            return View(students);
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 10, string? sortBy = "name", string? sortDir = "asc") {
+            var (students, total) = await _studentService.GetPaged(page, pageSize, sortBy, sortDir);
+            var vm = new StudentIndexViewModel {
+                Students = students,
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = total,
+                SortBy = sortBy,
+                SortDir = sortDir
+            };
+            return View(vm);
         }
 
         public IActionResult Create() {

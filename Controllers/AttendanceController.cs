@@ -15,14 +15,31 @@ namespace DojoManager.Controllers {
             => (_attendanceService, _sessionService, _studentService) = (attendanceService, sessionService, studentService);
 
 
-        public async Task<IActionResult> Index() {
-            var attendances = await _attendanceService.GetAll();
-            return View(attendances);
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 10, string? sortBy = "date", string? sortDir = "desc") {
+            var (attendances, total) = await _attendanceService.GetPaged(page, pageSize, sortBy, sortDir);
+            var vm = new AttendanceIndexViewModel {
+                Attendances = attendances,
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = total,
+                SortBy = sortBy,
+                SortDir = sortDir
+            };
+            return View(vm);
         }
 
-        public async Task<IActionResult> ByStudent(int id) {
-            var data = await _attendanceService.GetByStudent(id);
-            return View(data);
+        public async Task<IActionResult> ByStudent(int id, int page = 1, int pageSize = 10, string? sortBy = "date", string? sortDir = "desc") {
+            var (attendances, total) = await _attendanceService.GetByStudentPaged(id, page, pageSize, sortBy, sortDir);
+            var vm = new AttendanceIndexViewModel {
+                Attendances = attendances,
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = total,
+                SortBy = sortBy,
+                SortDir = sortDir,
+                StudentId = id
+            };
+            return View(vm);
         }
 
         [HttpPost]
@@ -34,7 +51,7 @@ namespace DojoManager.Controllers {
         [HttpPost]
         public async Task<IActionResult> Remove(int studentId, int sessionId) {
             await _attendanceService.Remove(studentId, sessionId);
-            return RedirectToAction("ByStudent", new { id = studentId });
+            return RedirectToAction("Details", "Sessions", new { id = sessionId });
         }
 
         public async Task<IActionResult> Create(int? sessionId) {
@@ -47,8 +64,10 @@ namespace DojoManager.Controllers {
             return View(vm);
         }
         [HttpPost]
-        public async Task<IActionResult> Create(AddAttendanceViewModel vm) {
-            await _attendanceService.Add(vm.StudentId, vm.SessionId);
+        public async Task<IActionResult> Create(AddAttendanceViewModel vm)
+        {
+            foreach (var studentId in vm.StudentIds)
+                await _attendanceService.Add(studentId, vm.SessionId);
 
             return RedirectToAction("Details", "Sessions", new { id = vm.SessionId });
         }

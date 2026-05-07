@@ -4,15 +4,16 @@
 
 <form asp-action="Create" method="post">
 
-    <div>
-        <label>Student</label>
-        <select asp-for="StudentId">
-            @foreach (var s in Model.Students)
-            {
-                <option value="@s.Id">@s.Name</option>
-            }
-        </select>
-    </div>
+<div>
+    <label>Students</label>
+    @foreach (var s in Model.Students)
+    {
+        <div>
+            <input type="checkbox" name="StudentIds" value="@s.Id" id="student_@s.Id" />
+            <label for="student_@s.Id">@s.Name</label>
+        </div>
+    }
+</div>
 
     @if (Model.SessionId != 0)
     {

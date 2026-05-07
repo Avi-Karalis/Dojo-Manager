@@ -1,14 +1,49 @@
-﻿@model List<Attendance>
+﻿@model DojoManager.ViewModels.AttendanceIndexViewModel
 
-<h2>All Attendance</h2>
+<h2>Attendance for @Model.Attendances.FirstOrDefault()?.Student?.Name</h2>
 
-<table>
-    @foreach (var a in Model)
-    {
+<table class="table">
+    <thead>
         <tr>
-            <td>@a.Student.Name</td>
-            <td>@a.Session.Date</td>
-            <td>@a.Session.Location</td>
+            <th>
+                <a href="@Url.Action("ByStudent", new { id = Model.StudentId, page = 1, pageSize = Model.PageSize, sortBy = "date", sortDir = Model.NextDir("date") })">
+                    Date@(Model.SortIndicator("date"))
+                </a>
+            </th>
+            <th>
+                <a href="@Url.Action("ByStudent", new { id = Model.StudentId, page = 1, pageSize = Model.PageSize, sortBy = "location", sortDir = Model.NextDir("location") })">
+                    Location@(Model.SortIndicator("location"))
+                </a>
+            </th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (var a in Model.Attendances)
+        {
+            <tr>
+                <td>@a.Session!.Date.ToString("yyyy-MM-dd")</td>
+                <td>@a.Session.Location</td>
+            </tr>
+        }
+    </tbody>
 </table>
+
+<div style="display:flex; align-items:center; gap:1rem;">
+    @if (Model.HasPrev)
+    {
+        <a href="@Url.Action("ByStudent", new { id = Model.StudentId, page = Model.Page - 1, pageSize = Model.PageSize, sortBy = Model.SortBy, sortDir = Model.SortDir })">← Prev</a>
+    }
+    <span>Page @Model.Page of @Model.TotalPages (@Model.TotalCount total)</span>
+    @if (Model.HasNext)
+    {
+        <a href="@Url.Action("ByStudent", new { id = Model.StudentId, page = Model.Page + 1, pageSize = Model.PageSize, sortBy = Model.SortBy, sortDir = Model.SortDir })">Next →</a>
+    }
+    <span>
+        Page size:
+        @foreach (var size in new[] { 5, 10, 25, 50 })
+        {
+            <a href="@Url.Action("ByStudent", new { id = Model.StudentId, page = 1, pageSize = size, sortBy = Model.SortBy, sortDir = Model.SortDir })"
+               style="margin-right:4px; @(Model.PageSize == size ? "font-weight:bold;" : "")">@size</a>
+        }
+    </span>
+</div>

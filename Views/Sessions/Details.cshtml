@@ -15,12 +15,31 @@
 }
 else
 {
-    <ul>
-        @foreach (var a in Model.Attendances)
-        {
-            <li>@a.Student.Name</li>
-        }
-    </ul>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Rank</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model.Attendances)
+            {
+                <tr>
+                    <td>@a.Student.Name</td>
+                    <td>@a.Student.Rank</td>
+                    <td>
+                        <form asp-controller="Attendances" asp-action="Remove" method="post" style="display:inline">
+                            <input type="hidden" name="studentId" value="@a.StudentId" />
+                            <input type="hidden" name="sessionId" value="@a.SessionId" />
+                            <button type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
 <a asp-controller="Attendances"

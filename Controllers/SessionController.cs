@@ -1,4 +1,5 @@
 ﻿using DojoManager.Models;
+using DojoManager.ViewModels;
 using DojoManager.Services;
 using Microsoft.AspNetCore.Mvc;
 namespace DojoManager.Controllers {
@@ -10,9 +11,18 @@ namespace DojoManager.Controllers {
             _service = service;
         }
 
-        public async Task<IActionResult> Index() {
-            var sessions = await _service.GetAll();
-            return View(sessions);
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 10, string? sortBy = "date", string? sortDir = "desc") {
+            var (sessions, totalCount) = await _service.GetPaged(page, pageSize, sortBy, sortDir);
+            var viewModel = new SessionIndexViewModel
+            {
+                Sessions = sessions,
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                SortBy = sortBy,
+                SortDir = sortDir
+            };
+            return View(viewModel);
         }
 
         public IActionResult Create() {

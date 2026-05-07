@@ -1,19 +1,37 @@
-﻿@model List<Student>
+﻿@model DojoManager.ViewModels.StudentIndexViewModel
 
 <h2>Students</h2>
 
 <a asp-action="Create">Create New</a>
 
-<table>
-    <tr>
-        <th>Name</th>
-        <th>Rank</th>
-        <th>Type</th>
-        <th>Payment</th>
-        <th>Actions</th>
-    </tr>
-
-    @foreach (var s in Model)
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize, sortBy = "name", sortDir = Model.NextDir("name") })">
+                    Name@(Model.SortIndicator("name"))
+                </a>
+            </th>
+            <th>
+                <a href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize, sortBy = "rank", sortDir = Model.NextDir("rank") })">
+                    Rank@(Model.SortIndicator("rank"))
+                </a>
+            </th>
+            <th>
+                <a href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize, sortBy = "isvisitor", sortDir = Model.NextDir("isvisitor") })">
+                    Type@(Model.SortIndicator("isvisitor"))
+                </a>
+            </th>
+            <th>
+                <a href="@Url.Action("Index", new { page = 1, pageSize = Model.PageSize, sortBy = "lastpaiddate", sortDir = Model.NextDir("lastpaiddate") })">
+                    Payment@(Model.SortIndicator("lastpaiddate"))
+                </a>
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var s in Model.Students)
     {
         <tr>
             <td>@s.Name</td>
@@ -38,10 +56,31 @@
                 }
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@s.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@s.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@s.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@s.Id">Edit</a> | <a asp-action="Details" asp-route-id="@s.Id">Details</a> | <a asp-action="Delete" asp-route-id="@s.Id">Delete</a>
             </td>
         </tr>
     }
+    </tbody>
 </table>
+
+<div style="display:flex; align-items:center; gap:1rem;">
+    @if (Model.HasPrev)
+    {
+        <a asp-action="Index" asp-route-page="@(Model.Page - 1)" asp-route-pageSize="@Model.PageSize"
+           asp-route-sortBy="@Model.SortBy" asp-route-sortDir="@Model.SortDir">← Prev</a>
+    }
+    <span>Page @Model.Page of @Model.TotalPages (@Model.TotalCount total)</span>
+    @if (Model.HasNext)
+    {
+        <a asp-action="Index" asp-route-page="@(Model.Page + 1)" asp-route-pageSize="@Model.PageSize"
+           asp-route-sortBy="@Model.SortBy" asp-route-sortDir="@Model.SortDir">Next →</a>
+    }
+    <span>
+        Page size:
+        @foreach (var size in new[] { 5, 10, 25, 50 })
+        {
+            <a href="@Url.Action("Index", new { page = 1, pageSize = size, sortBy = Model.SortBy, sortDir = Model.SortDir })"
+               style="margin-right:4px; @(Model.PageSize == size ? "font-weight:bold;" : "")">@size</a>
+        }
+    </span>
+</div>

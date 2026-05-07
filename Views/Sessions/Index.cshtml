@@ -1,16 +1,32 @@
-﻿@model List<Session>
+﻿@model DojoManager.ViewModels.SessionIndexViewModel
 
 <h2>Sessions</h2>
 
 <a asp-action="Create">Create Session</a>
 
-<ul>
-    @foreach (var s in Model)
-    {
-        <li>
-            @s.Date - @s.Location
-            <a asp-action="Details" asp-route-id="@s.Id">View</a>
-            <a asp-action="Delete" asp-route-id="@s.Id">Delete</a>
-        </li>
-    }
-</ul>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a href="@Url.Action("Index",new { page = 1, pageSize = Model.PageSize, sortBy = "Date", sortDir = Model.NextDir("Date") })">
+                    Date@(Model.SortIndicator("Date"))
+                </a>
+            </th>
+            <th>Location</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Session s in Model.Sessions)
+        {
+            <tr>
+                <td>@s.Date.ToString("yyyy-MM-dd, dddd")</td>
+                <td>@s.Location</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@s.Id">View</a> |
+                    <a asp-action="Delete" asp-route-id="@s.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
